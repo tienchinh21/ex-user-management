@@ -1,25 +1,34 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import AddEmployeeForm from './components/EmployeeForm/AddEmployeeForm/AddEmployeeForm';
+import EmployeeList from './components/EmployeeList/EmployeeList';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    const [employees, setEmployees] = useState([]);
+    const [editingIndex, setEditingIndex] = useState(-1);
 
+    const addEmployeeHandler = (newEmployee) => {
+        setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
+        setEditingIndex(-1);
+    };
+    const editEmployeeHandler = (index) => {
+        setEditingIndex(index);
+    };
+    const saveEmployeeChangesHandler = (editedEmployee) => {
+        const updatedEmployees = [...employees];
+        updatedEmployees[editingIndex] = editedEmployee;
+        setEmployees(updatedEmployees);
+        setEditingIndex(-1);
+    };
+    return (
+        <div className="App">
+            <AddEmployeeForm
+                onAddEmployee={addEmployeeHandler}
+                onSaveChanges={saveEmployeeChangesHandler}
+                employeeToEdit={editingIndex !== -1 ? employees[editingIndex] : null}
+            />
+            <EmployeeList employees={employees} onEditEmployee={editEmployeeHandler} />
+        </div>
+    );
+}
 export default App;
